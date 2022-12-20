@@ -48,7 +48,8 @@ usa-volume02-sfo3 ansible_host=143.110.154.139
 [seaweedfs_filers:children]
 seaweedfs_masters
 
-[seaweedfs_mounts]
+[whypfs_nodes:children]
+seaweedfs_masters
 
 [cockroachdb:children]
 seaweedfs_masters

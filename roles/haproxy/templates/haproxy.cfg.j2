@@ -23,5 +23,5 @@ listen psql
     balance roundrobin
     option httpchk GET /health?ready=1
 {% for node in groups.cockroachdb|intersect(groups[seaweedfs_region]) %}
-    server cockroach{{ loop.index }} {{ hostvars[node]["ansible_wt0"]["ipv4"]["address"]}}:26257 check port 8080
+    server cockroach{{ loop.index }} {{ hostvars[node]["ansible_wt0"]["ipv4"]["address"]}}:26257 check port 8082
 {% endfor %}
