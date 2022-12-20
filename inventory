@@ -45,7 +45,8 @@ eur-volume02-lon1 ansible_host=161.35.168.164
 usa-volume01-nyc3 ansible_host=157.245.112.53
 usa-volume02-sfo3 ansible_host=143.110.154.139
 
-[seaweedfs_filers]
+[seaweedfs_filers:children]
+seaweedfs_masters
 
 [seaweedfs_mounts]
 

@@ -1,0 +1,27 @@
+global
+  maxconn 4096
+
+defaults
+    mode                tcp
+    # Timeout values should be configured for your specific use.
+    # See: https://cbonte.github.io/haproxy-dconv/1.8/configuration.html#4-timeout%20connect
+    timeout connect     10s
+    timeout client      1m
+    timeout server      1m
+    # TCP keep-alive on client side. Server already enables them.
+    option              clitcpka
+
+listen stats
+    mode http
+    bind {{ ansible_wt0.ipv4.address }}:8081
+    stats enable
+    stats uri /
+
+listen psql
+    bind {{ ansible_wt0.ipv4.address }}:26258
+    mode tcp
+    balance roundrobin
+    option httpchk GET /health?ready=1
+{% for node in groups.cockroachdb|intersect(groups[seaweedfs_region]) %}
+    server cockroach{{ loop.index }} {{ hostvars[node]["ansible_wt0"]["ipv4"]["address"]}}:26257 check port 8080
+{% endfor %}

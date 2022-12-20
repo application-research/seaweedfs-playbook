@@ -28,6 +28,9 @@
   become: true
   remote_user: root
 
+  vars:
+    - cockroachdb_initialize: true
+
   roles:
     - cockroachdb
 
@@ -41,6 +44,7 @@
     - "vars/seaweedfs.yml"
 
   roles:
+    - haproxy
     - seaweedfs-filer
 
 - name: Set up SeaweedFS Volume Servers

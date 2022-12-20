@@ -65,8 +65,8 @@
     state: restarted
     daemon_reload: true
 
-# - name: Check whether we need to initialize the cluster
-#   when: "not groups['cockroachdb']|intersect(groups[seaweedfs_region])|length == 1"
-
-# - name: Initialize the cluster
-#   when: "not groups['cockroachdb']|intersect(groups[seaweedfs_region])|length == 1"
+- name: Initialize the cluster
+  command:
+    cmd: cockroach init --insecure --host {{ ansible_wt0.ipv4.address }}
+  run_once: true
+  when: cockroachdb_initialize

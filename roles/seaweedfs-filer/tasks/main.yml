@@ -1,1 +1,23 @@
 ---
+- name: Install systemd file for SeaweedFS Filer
+  template:
+    src: seaweedfs-filer.service
+    dest: /etc/systemd/system/seaweedfs-filer.service
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install config file for SeaweedFS Master
+  template:
+    src: filer.toml.j2
+    dest: /etc/seaweedfs/filer.toml
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Start and enable SeaweedFS filer
+  systemd:
+    name: seaweedfs-filer
+    enabled: true
+    state: restarted
+    daemon_reload: true
