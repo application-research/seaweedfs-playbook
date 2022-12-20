@@ -1,0 +1,50 @@
+[aus:vars]
+seaweedfs_region=aus
+
+[aus]
+aus-master01-syd1 ansible_host=170.64.132.75
+aus-volume01-syd1 ansible_host=170.64.150.227
+aus-volume02-syd1 ansible_host=170.64.158.59
+
+[eur:vars]
+seaweedfs_region=eur
+
+[eur]
+eur-master01-ams3 ansible_host=159.223.218.238
+eur-volume01-ams3 ansible_host=146.190.238.56
+eur-volume02-lon1 ansible_host=161.35.168.164
+
+[usa:vars]
+seaweedfs_region=usa
+
+[usa]
+usa-master01-nyc1 ansible_host=104.248.122.35
+usa-master02-nyc1 ansible_host=192.241.140.51
+usa-master03-nyc1 ansible_host=174.138.38.206
+usa-volume01-nyc3 ansible_host=157.245.112.53
+usa-volume02-sfo3 ansible_host=143.110.154.139
+
+[seaweedfs:vars]
+[seaweedfs:children]
+aus
+eur
+usa
+
+[seaweedfs_masters]
+eur-master01-ams3 ansible_host=159.223.218.238
+aus-master01-syd1 ansible_host=170.64.132.75
+usa-master01-nyc1 ansible_host=104.248.122.35
+usa-master02-nyc1 ansible_host=192.241.140.51
+usa-master03-nyc1 ansible_host=174.138.38.206
+
+[seaweedfs_volumes]
+aus-volume01-syd1 ansible_host=170.64.150.227
+aus-volume02-syd1 ansible_host=170.64.158.59
+eur-volume01-ams3 ansible_host=146.190.238.56
+eur-volume02-lon1 ansible_host=161.35.168.164
+usa-volume01-nyc3 ansible_host=157.245.112.53
+usa-volume02-sfo3 ansible_host=143.110.154.139
+
+[seaweedfs_filers]
+
+[seaweedfs_mounts]

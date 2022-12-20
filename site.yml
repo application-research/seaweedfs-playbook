@@ -1,0 +1,82 @@
+---
+- name: Install SeaweedFS
+  hosts: seaweedfs
+  become: true
+  remote_user: root
+
+  vars_files:
+    - "vars/secrets.yml"
+
+  tasks:
+    # Install SeaweedFS
+    - name: Download SeaweedFS
+      get_url:
+        url: https://github.com/seaweedfs/seaweedfs/releases/download/3.37/linux_amd64.tar.gz
+        dest: /usr/local/src/seaweedfs_3.37_linux.tar.gz
+
+    - name: Create unpack directory for seaweedfs
+      file:
+        path: /usr/local/src/seaweedfs
+        owner: root
+        group: root
+        mode: 0755
+        state: directory
+
+    - name: Unpack SeaweedFS
+      unarchive:
+        src: /usr/local/src/seaweedfs_3.37_linux.tar.gz
+        dest: /usr/local/bin
+        remote_src: true
+
+    - name: Ensure 'weed' executable has execute bit
+      file:
+        path: /usr/local/bin/weed
+        mode: 0755
+        owner: root
+        group: root
+        state: file
+
+  roles:
+    - zorlin.netbird
+
+- name: Set up SeaweedFS Masters
+  hosts: seaweedfs_masters
+  become: true
+  remote_user: root
+
+  vars_files:
+    - "vars/secrets.yml"
+    - "vars/seaweedfs.yml"
+
+  tasks:
+  - name: Install systemd file for SeaweedFS Master
+    template:
+      src: seaweedfs-master.service
+      dest: /etc/systemd/system/seaweedfs-master.service
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Install config file for SeaweedFS Master
+    template:
+      src: seaweedfs-master.env
+      dest: /etc/seaweedfs/seaweedfs-master.env
+      owner: root
+      group: root
+      mode: 0755
+   
+  - name: Ensure data directory for SeaweedFS master exists
+    file:
+      path: /var/lib/seaweedfs
+      mode: 0755
+      owner: root
+      group: root
+      state: directory
+    register: seaweedfs_dir
+
+  - name: Start and enable SeaweedFS master
+    systemd:
+      name: seaweedfs-master
+      enabled: true
+      state: restarted
+      daemon_reload: true

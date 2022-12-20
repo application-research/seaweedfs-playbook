@@ -1,0 +1,11 @@
+[Unit]
+Description=SeaweedFS Master
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/weed master -mdir=/var/lib/seaweedfs -peers={% for node in groups.seaweedfs_masters | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_wt0"]["ipv4"]["address"] }}:9333{% if not loop.last %},{% endif %}{% endfor %} -ip={{ ansible_wt0.ipv4.address }} -volumeSizeLimitMB={{ volumeSizeLimitMB }}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
