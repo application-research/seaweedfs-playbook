@@ -2,7 +2,7 @@
 seaweedfs_region=aus
 
 [aus]
-aus-master01-syd1 ansible_host=170.64.132.75
+aus-master01-syd1 ansible_host=170.64.132.75 cockroachdb_locality="region=syd,zone=syd1"
 aus-volume01-syd1 ansible_host=170.64.150.227
 aus-volume02-syd1 ansible_host=170.64.158.59
 
@@ -10,7 +10,7 @@ aus-volume02-syd1 ansible_host=170.64.158.59
 seaweedfs_region=eur
 
 [eur]
-eur-master01-ams3 ansible_host=159.223.218.238
+eur-master01-ams3 ansible_host=159.223.218.238 cockroachdb_locality="region=ams,zone=ams3"
 eur-volume01-ams3 ansible_host=146.190.238.56
 eur-volume02-lon1 ansible_host=161.35.168.164
 
@@ -18,9 +18,9 @@ eur-volume02-lon1 ansible_host=161.35.168.164
 seaweedfs_region=usa
 
 [usa]
-usa-master01-nyc1 ansible_host=104.248.122.35
-usa-master02-nyc1 ansible_host=192.241.140.51
-usa-master03-nyc1 ansible_host=174.138.38.206
+usa-master01-nyc1 ansible_host=104.248.122.35 cockroachdb_locality="region=nyc,zone=nyc1"
+usa-master02-nyc1 ansible_host=192.241.140.51 cockroachdb_locality="region=nyc,zone=nyc1"
+usa-master03-nyc1 ansible_host=174.138.38.206 cockroachdb_locality="region=nyc,zone=nyc1"
 usa-volume01-nyc3 ansible_host=157.245.112.53
 usa-volume02-sfo3 ansible_host=143.110.154.139
 
