@@ -1,0 +1,31 @@
+---
+- name: Install systemd file for SeaweedFS Volume Server
+  template:
+    src: seaweedfs-volume-server.service
+    dest: /etc/systemd/system/seaweedfs-volume-server.service
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Install config file for SeaweedFS Volume Server
+  template:
+    src: seaweedfs-volume-server.cfg.j2
+    dest: /etc/seaweedfs/volume-server.cfg
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create example storage volume
+  file:
+    path: /seaweed-brick/
+    owner: root
+    group: root
+    mode: 0750
+    state: directory
+
+- name: Start and enable SeaweedFS volume server
+  systemd:
+    name: seaweedfs-volume-server
+    enabled: true
+    state: restarted
+    daemon_reload: true

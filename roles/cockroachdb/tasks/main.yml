@@ -1,0 +1,72 @@
+---
+- name: Install dependencies
+  package:
+    name: 
+      - tzdata
+      - unzip
+    state: present
+
+- name: Install CockroachDB binary
+  ansible.builtin.unarchive:
+    src: https://binaries.cockroachdb.com/cockroach-v22.2.0.linux-amd64.tgz
+    dest: /usr/local/bin/
+    remote_src: true
+    extra_opts:
+    - "--add-file"
+    - "cockroach-v22.2.0.linux-amd64/cockroach"
+
+- name: Install systemd file for CockroachDB server
+  template:
+    src: cockroachdb.service
+    dest: /etc/systemd/system/cockroachdb.service
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Create CockroachDB library folder
+  file:
+    path: /usr/local/lib/cockroach
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Install CockroachDB libraries
+  ansible.builtin.unarchive:
+    src: https://binaries.cockroachdb.com/cockroach-v22.2.0.linux-amd64.tgz
+    dest: /usr/local/lib/cockroach
+    remote_src: true
+    extra_opts:
+    - "--strip-components=2"
+    - "--add-file"
+    - "cockroach-v22.2.0.linux-amd64/lib/libgeos.so"
+    - "cockroach-v22.2.0.linux-amd64/lib/libgeos_c.so"
+
+- name: Create CockroachDB data directory
+  file:
+    path: /var/lib/cockroachdb
+    owner: root
+    group: root
+    mode: 0750
+    state: directory
+
+- name: Install config file for CockroachDB
+  template:
+    src: cockroachdb.cfg.j2
+    dest: /etc/cockroachdb.cfg
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Start and enable CockroachDB server
+  systemd:
+    name: cockroachdb
+    enabled: true
+    state: restarted
+    daemon_reload: true
+
+# - name: Check whether we need to initialize the cluster
+#   when: "not groups['cockroachdb']|intersect(groups[seaweedfs_region])|length == 1"
+
+# - name: Initialize the cluster
+#   when: "not groups['cockroachdb']|intersect(groups[seaweedfs_region])|length == 1"

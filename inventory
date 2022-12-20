@@ -37,7 +37,7 @@ usa-master01-nyc1 ansible_host=104.248.122.35
 usa-master02-nyc1 ansible_host=192.241.140.51
 usa-master03-nyc1 ansible_host=174.138.38.206
 
-[seaweedfs_volumes]
+[seaweedfs_volume_servers]
 aus-volume01-syd1 ansible_host=170.64.150.227
 aus-volume02-syd1 ansible_host=170.64.158.59
 eur-volume01-ams3 ansible_host=146.190.238.56
@@ -48,3 +48,6 @@ usa-volume02-sfo3 ansible_host=143.110.154.139
 [seaweedfs_filers]
 
 [seaweedfs_mounts]
+
+[cockroachdb:children]
+seaweedfs_masters

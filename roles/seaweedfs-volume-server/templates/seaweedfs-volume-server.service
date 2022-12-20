@@ -1,0 +1,12 @@
+[Unit]
+Description=SeaweedFS Volume Server
+After=network-online.target
+
+[Service]
+EnvironmentFile=/etc/seaweedfs/volume-server.cfg
+ExecStart=/usr/local/bin/weed volume -mserver=${WEED_VOLUME_MASTER_SERVER} -ip=${WEED_VOLUME_IP} -dir=${WEED_VOLUME_DISKS} -max=0
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

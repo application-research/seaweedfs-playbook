@@ -1,0 +1,18 @@
+[Unit]
+Description=CockroachDB Server
+After=network-online.target
+
+[Service]
+EnvironmentFile=/etc/cockroachdb.cfg
+ExecStart=/usr/local/bin/cockroach \
+{% if groups['cockroachdb']|intersect(groups[seaweedfs_region])|length == 1 %}start-single-node{% else %}start{% endif %} \
+--insecure \
+--store=/var/lib/cockroachdb \
+--listen-addr=${COCKROACHDB_IP}:26257 \
+--http-addr=${COCKROACHDB_IP}:8080 \
+--join=${COCKROACHDB_JOIN}
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -7,50 +7,9 @@
   vars_files:
     - "vars/secrets.yml"
 
-  tasks:
-    # Install SeaweedFS
-    - name: Download SeaweedFS
-      get_url:
-        url: https://github.com/seaweedfs/seaweedfs/releases/download/3.37/linux_amd64.tar.gz
-        dest: /usr/local/src/seaweedfs_3.37_linux.tar.gz
-
-    - name: Create unpack directory for seaweedfs
-      file:
-        path: /usr/local/src/seaweedfs
-        owner: root
-        group: root
-        mode: 0755
-        state: directory
-
-    - name: Unpack SeaweedFS
-      unarchive:
-        src: /usr/local/src/seaweedfs_3.37_linux.tar.gz
-        dest: /usr/local/bin
-        remote_src: true
-
-    - name: Ensure 'weed' executable has execute bit
-      file:
-        path: /usr/local/bin/weed
-        mode: 0755
-        owner: root
-        group: root
-        state: file
-
-    - name: Ensure the SeaweedFS config directory exists
-      file:
-        path: /etc/seaweedfs
-        mode: 0755
-        owner: root
-        group: root
-        state: directory
-
-    - name: Install security config for SeaweedFS
-      template:
-        src: security.toml.j2
-        dest: /etc/seaweedfs/security.toml
-
   roles:
     - zorlin.netbird
+    - seaweedfs
 
 - name: Set up SeaweedFS Masters
   hosts: seaweedfs_masters
@@ -61,35 +20,37 @@
     - "vars/secrets.yml"
     - "vars/seaweedfs.yml"
 
-  tasks:
-  - name: Install systemd file for SeaweedFS Master
-    template:
-      src: seaweedfs-master.service
-      dest: /etc/systemd/system/seaweedfs-master.service
-      owner: root
-      group: root
-      mode: 0755
+  roles:
+    - seaweedfs-master
 
-  - name: Install config file for SeaweedFS Master
-    template:
-      src: seaweedfs-master.cfg.j2
-      dest: /etc/seaweedfs/master.cfg
-      owner: root
-      group: root
-      mode: 0755
-   
-  - name: Ensure data directory for SeaweedFS master exists
-    file:
-      path: /var/lib/seaweedfs
-      mode: 0755
-      owner: root
-      group: root
-      state: directory
-    register: seaweedfs_dir
+- name: Set up CockroachDB
+  hosts: cockroachdb
+  become: true
+  remote_user: root
 
-  - name: Start and enable SeaweedFS master
-    systemd:
-      name: seaweedfs-master
-      enabled: true
-      state: restarted
-      daemon_reload: true
+  roles:
+    - cockroachdb
+
+- name: Set up SeaweedFS Filers
+  hosts: seaweedfs_filers
+  become: true
+  remote_user: root
+
+  vars_files:
+    - "vars/secrets.yml"
+    - "vars/seaweedfs.yml"
+
+  roles:
+    - seaweedfs-filer
+
+- name: Set up SeaweedFS Volume Servers
+  hosts: seaweedfs_volume_servers
+  become: true
+  remote_user: root
+
+  vars_files:
+    - "vars/secrets.yml"
+    - "vars/seaweedfs.yml"
+
+  roles:
+    - seaweedfs-volume-server

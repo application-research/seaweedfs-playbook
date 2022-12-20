@@ -1,0 +1,41 @@
+---
+# Install SeaweedFS
+- name: Download SeaweedFS
+  get_url:
+    url: https://github.com/seaweedfs/seaweedfs/releases/download/3.37/linux_amd64.tar.gz
+    dest: /usr/local/src/seaweedfs_3.37_linux.tar.gz
+
+- name: Create unpack directory for seaweedfs
+  file:
+    path: /usr/local/src/seaweedfs
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+
+- name: Unpack SeaweedFS
+  unarchive:
+    src: /usr/local/src/seaweedfs_3.37_linux.tar.gz
+    dest: /usr/local/bin
+    remote_src: true
+
+- name: Ensure 'weed' executable has execute bit
+  file:
+    path: /usr/local/bin/weed
+    mode: 0755
+    owner: root
+    group: root
+    state: file
+
+- name: Ensure the SeaweedFS config directory exists
+  file:
+    path: /etc/seaweedfs
+    mode: 0755
+    owner: root
+    group: root
+    state: directory
+
+- name: Install security config for SeaweedFS
+  template:
+    src: security.toml.j2
+    dest: /etc/seaweedfs/security.toml
