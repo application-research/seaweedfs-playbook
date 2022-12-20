@@ -36,6 +36,19 @@
         group: root
         state: file
 
+    - name: Ensure the SeaweedFS config directory exists
+      file:
+        path: /etc/seaweedfs
+        mode: 0755
+        owner: root
+        group: root
+        state: directory
+
+    - name: Install security config for SeaweedFS
+      template:
+        src: security.toml.j2
+        dest: /etc/seaweedfs/security.toml
+
   roles:
     - zorlin.netbird
 
@@ -59,8 +72,8 @@
 
   - name: Install config file for SeaweedFS Master
     template:
-      src: seaweedfs-master.env
-      dest: /etc/seaweedfs/seaweedfs-master.env
+      src: seaweedfs-master.cfg.j2
+      dest: /etc/seaweedfs/master.cfg
       owner: root
       group: root
       mode: 0755

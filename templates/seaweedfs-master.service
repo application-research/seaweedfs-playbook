@@ -3,7 +3,8 @@ Description=SeaweedFS Master
 After=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/weed master -mdir=/var/lib/seaweedfs -peers={% for node in groups.seaweedfs_masters | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_wt0"]["ipv4"]["address"] }}:9333{% if not loop.last %},{% endif %}{% endfor %} -ip={{ ansible_wt0.ipv4.address }} -volumeSizeLimitMB={{ volumeSizeLimitMB }}
+EnvironmentFile=/etc/seaweedfs/master.cfg
+ExecStart=/usr/local/bin/weed master -disableHttp -mdir=${WEED_MASTER_DIRECTORY} -peers=${WEED_MASTER_PEERS} -ip=${WEED_MASTER_IP} -volumeSizeLimitMB=${WEED_MASTER_VOLUMESIZELIMIT}
 Restart=always
 RestartSec=10
 
