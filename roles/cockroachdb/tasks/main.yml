@@ -12,6 +12,7 @@
     dest: /usr/local/bin/
     remote_src: true
     extra_opts:
+    - "--strip-components=1"
     - "--add-file"
     - "cockroach-v22.2.0.linux-amd64/cockroach"
 
