@@ -1,0 +1,13 @@
+[Unit]
+Description=Mount SeaweedFS
+Requires=network-online.target
+Wants=networking.service
+
+[Mount]
+What=fuse
+Where=/mnt/seaweedfs
+Type=fuse.weed
+Options=filer.path=/estuary,filer='{% for node in groups.seaweedfs_filers | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_wt0"]["ipv4"]["address"] }}:8888{% if not loop.last %},{% endif %}{% endfor %}'
+
+[Install]
+WantedBy=multi-user.target
