@@ -29,7 +29,7 @@
   remote_user: root
 
   vars:
-    - cockroachdb_initialize: true
+    - cockroachdb_initialize: false
 
   roles:
     - cockroachdb
@@ -73,12 +73,14 @@
         mode: 0755
         state: directory
 
-    - name: Set up SeaweedFS mount
-      mount:
-        path: /mnt/seaweedfs
-        src: fuse
-        fstype: fuse.weed
-        state: mounted
-        opts:
-          - filer.path=/estuary
-          - filer='{% for node in groups.seaweedfs_filers | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_wt0"]["ipv4"]["address"] }}:8888{% if not loop.last %},{% endif %}{% endfor %}'
+    # - name: Set up SeaweedFS mount
+    # NOTE: Can't really use the regular Ansible mount for this
+    # as it BREAKS MACHINES
+    #   mount:
+    #     path: /mnt/seaweedfs
+    #     src: fuse
+    #     fstype: fuse.weed
+    #     state: mounted
+    #     opts:
+    #       - filer.path=/estuary
+    #       - filer='{% for node in groups.seaweedfs_filers | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_wt0"]["ipv4"]["address"] }}:8888{% if not loop.last %},{% endif %}{% endfor %}'
