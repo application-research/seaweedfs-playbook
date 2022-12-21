@@ -18,7 +18,7 @@ ui = true
 # - the Volume server validates the JWT on reading
 # NOTE: jwt for read is only supported with master+volume setup. Filer does not support this mode.
 [jwt.signing.read]
-key = "{{ seaweedfs_jwt_signing_read }}"
+key = ""
 expires_after_seconds = 10           # seconds
 
 
