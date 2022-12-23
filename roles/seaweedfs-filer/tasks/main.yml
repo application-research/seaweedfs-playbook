@@ -19,5 +19,5 @@
   systemd:
     name: seaweedfs-filer
     enabled: true
-    state: restarted
+    state: started
     daemon_reload: true

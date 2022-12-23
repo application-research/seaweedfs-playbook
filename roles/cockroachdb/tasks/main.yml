@@ -63,7 +63,7 @@
   systemd:
     name: cockroachdb
     enabled: true
-    state: restarted
+    state: started
     daemon_reload: true
 
 - name: Initialize the cluster

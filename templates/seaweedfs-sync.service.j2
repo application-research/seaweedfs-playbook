@@ -1,0 +1,12 @@
+[Unit]
+Description=SeaweedFS Sync Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/weed filer.sync -a {{ ansible_wt0.ipv4.address }}:8888 -b {{ hostvars[sync_partner]["ansible_wt0"]["ipv4"]["address"] }}:8888
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

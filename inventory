@@ -18,7 +18,7 @@ eur-volume02-lon1 ansible_host=161.35.168.164
 seaweedfs_region=usa_op
 
 [usa_op]
-usa-op-test01-charlotte cockroachdb_locality="region=us-east,zone=charlotte"
+saturn1.riff.cc cockroachdb_locality="region=us-east,zone=charlotte"
 
 [usa:vars]
 seaweedfs_region=usa
@@ -62,3 +62,10 @@ seaweedfs_masters
 
 [cockroachdb:children]
 seaweedfs_masters
+
+[seaweedfs_sync_filers]
+usa-master01-nyc1 ansible_host=104.248.122.35 sync_partner=eur-master01-ams3
+eur-master01-ams3 ansible_host=128.199.45.225 sync_partner=aus-master01-syd1
+aus-master01-syd1 ansible_host=170.64.129.179 sync_partner=saturn1.riff.cc
+saturn1.riff.cc
+# saturn1.riff.cc is a sync filer technically, but is partnerless

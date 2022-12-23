@@ -1,0 +1,17 @@
+---
+- name: Install prerequisites
+  package:
+    name:
+      - git
+      - build-essential
+
+- name: Check out WhyPFS
+  git:
+    repo: https://github.com/whyrusleeping/whypfs
+    version: master
+    dest: /usr/local/src/whypfs
+
+- name: Build WhyPFS
+  command:
+    cmd: . /etc/profile.d/golang.sh ; . "/root.cargo/env" ; go build
+    chdir: /usr/local/src/whypfs
