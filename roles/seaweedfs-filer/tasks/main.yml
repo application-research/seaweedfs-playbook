@@ -1,6 +1,6 @@
 ---
 - name: Install systemd file for SeaweedFS Filer
-  template:
+  ansible.builtin.template:
     src: seaweedfs-filer.service
     dest: /etc/systemd/system/seaweedfs-filer.service
     owner: root
@@ -8,7 +8,7 @@
     mode: 0755
 
 - name: Install config file for SeaweedFS Filer
-  template:
+  ansible.builtin.template:
     src: filer.toml.j2
     dest: /etc/seaweedfs/filer.toml
     owner: root
@@ -16,7 +16,7 @@
     mode: 0755
 
 - name: Start and enable SeaweedFS filer
-  systemd:
+  ansible.builtin.systemd:
     name: seaweedfs-filer
     enabled: true
     state: started

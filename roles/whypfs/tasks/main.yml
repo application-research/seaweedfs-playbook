@@ -1,17 +1,18 @@
 ---
 - name: Install prerequisites
-  package:
+  ansible.builtin.package:
     name:
       - git
       - build-essential
 
 - name: Check out WhyPFS
-  git:
+  ansible.builtin.git:
     repo: https://github.com/whyrusleeping/whypfs
     version: master
     dest: /usr/local/src/whypfs
 
 - name: Build WhyPFS
-  command:
+  ansible.builtin.command:
     cmd: . /etc/profile.d/golang.sh ; . "/root.cargo/env" ; go build
     chdir: /usr/local/src/whypfs
+    creates: /usr/local/src/whypfs/whypfs

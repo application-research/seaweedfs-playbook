@@ -1,6 +1,6 @@
 ---
 - name: Install systemd file for SeaweedFS Master
-  template:
+  ansible.builtin.template:
     src: seaweedfs-master.service
     dest: /etc/systemd/system/seaweedfs-master.service
     owner: root
@@ -8,15 +8,15 @@
     mode: 0755
 
 - name: Install config file for SeaweedFS Master
-  template:
+  ansible.builtin.template:
     src: seaweedfs-master.cfg.j2
     dest: /etc/seaweedfs/master.cfg
     owner: root
     group: root
     mode: 0755
-  
+
 - name: Ensure data directory for SeaweedFS master exists
-  file:
+  ansible.builtin.file:
     path: /var/lib/seaweedfs
     mode: 0755
     owner: root
@@ -25,7 +25,7 @@
   register: seaweedfs_dir
 
 - name: Start and enable SeaweedFS master
-  systemd:
+  ansible.builtin.systemd:
     name: seaweedfs-master
     enabled: true
     state: started

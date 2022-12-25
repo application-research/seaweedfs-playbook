@@ -1,7 +1,7 @@
 ---
 - name: Install dependencies
-  package:
-    name: 
+  ansible.builtin.package:
+    name:
       - tzdata
       - unzip
     state: present
@@ -12,12 +12,12 @@
     dest: /usr/local/bin/
     remote_src: true
     extra_opts:
-    - "--strip-components=1"
-    - "--add-file"
-    - "cockroach-v22.2.0.linux-amd64/cockroach"
+      - "--strip-components=1"
+      - "--add-file"
+      - "cockroach-v22.2.0.linux-amd64/cockroach"
 
 - name: Install systemd file for CockroachDB server
-  template:
+  ansible.builtin.template:
     src: cockroachdb.service
     dest: /etc/systemd/system/cockroachdb.service
     owner: root
@@ -25,7 +25,7 @@
     mode: 0755
 
 - name: Create CockroachDB library folder
-  file:
+  ansible.builtin.file:
     path: /usr/local/lib/cockroach
     owner: root
     group: root
@@ -38,13 +38,13 @@
     dest: /usr/local/lib/cockroach
     remote_src: true
     extra_opts:
-    - "--strip-components=2"
-    - "--add-file"
-    - "cockroach-v22.2.0.linux-amd64/lib/libgeos.so"
-    - "cockroach-v22.2.0.linux-amd64/lib/libgeos_c.so"
+      - "--strip-components=2"
+      - "--add-file"
+      - "cockroach-v22.2.0.linux-amd64/lib/libgeos.so"
+      - "cockroach-v22.2.0.linux-amd64/lib/libgeos_c.so"
 
 - name: Create CockroachDB data directory
-  file:
+  ansible.builtin.file:
     path: /var/lib/cockroachdb
     owner: root
     group: root
@@ -52,7 +52,7 @@
     state: directory
 
 - name: Install config file for CockroachDB
-  template:
+  ansible.builtin.template:
     src: cockroachdb.cfg.j2
     dest: /etc/cockroachdb.cfg
     owner: root
@@ -60,14 +60,14 @@
     mode: 0755
 
 - name: Start and enable CockroachDB server
-  systemd:
+  ansible.builtin.systemd:
     name: cockroachdb
     enabled: true
     state: started
     daemon_reload: true
 
 - name: Initialize the cluster
-  command:
+  ansible.builtin.command:
     cmd: cockroach init --insecure --host {{ ansible_wt0.ipv4.address }}
   run_once: true
   when: cockroachdb_initialize

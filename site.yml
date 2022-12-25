@@ -29,7 +29,7 @@
   remote_user: root
 
   vars:
-    - cockroachdb_initialize: false
+    cockroachdb_initialize: false
 
   roles:
     - cockroachdb
@@ -82,6 +82,7 @@
         mode: 0755
 
     - name: Enable SeaweedFS mount
+      # noqa ignore-errors
       ansible.builtin.systemd:
         name: mnt-seaweedfs.mount
         enabled: true

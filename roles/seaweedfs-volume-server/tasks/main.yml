@@ -1,6 +1,6 @@
 ---
 - name: Install systemd file for SeaweedFS Volume Server
-  template:
+  ansible.builtin.template:
     src: seaweedfs-volume-server.service
     dest: /etc/systemd/system/seaweedfs-volume-server.service
     owner: root
@@ -8,7 +8,7 @@
     mode: 0755
 
 - name: Install config file for SeaweedFS Volume Server
-  template:
+  ansible.builtin.template:
     src: seaweedfs-volume-server.cfg.j2
     dest: /etc/seaweedfs/volume-server.cfg
     owner: root
@@ -16,7 +16,7 @@
     mode: 0755
 
 - name: Create example storage volume
-  file:
+  ansible.builtin.file:
     path: /seaweed-brick/
     owner: root
     group: root
@@ -24,7 +24,7 @@
     state: directory
 
 - name: Start and enable SeaweedFS volume server
-  systemd:
+  ansible.builtin.systemd:
     name: seaweedfs-volume-server
     enabled: true
     state: restarted
