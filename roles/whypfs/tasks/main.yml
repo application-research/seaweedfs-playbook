@@ -7,12 +7,12 @@
 
 - name: Check out WhyPFS
   ansible.builtin.git:
-    repo: https://github.com/whyrusleeping/whypfs
+    repo: https://github.com/zorlin/whypfs
     version: master
     dest: /usr/local/src/whypfs
 
 - name: Build WhyPFS
-  ansible.builtin.command:
-    cmd: . /etc/profile.d/golang.sh ; . "/root.cargo/env" ; go build
+  ansible.builtin.shell:
+    cmd: '. /etc/profile.d/golang.sh ; go build'
     chdir: /usr/local/src/whypfs
     creates: /usr/local/src/whypfs/whypfs
