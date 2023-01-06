@@ -5,14 +5,14 @@
       - git
       - build-essential
 
-- name: Check out WhyPFS
+- name: Check out WhyPFS-Gateway
   ansible.builtin.git:
-    repo: https://github.com/zorlin/whypfs
+    repo: https://github.com/application-research/whypfs-gateway
     version: master
-    dest: /usr/local/src/whypfs
+    dest: /usr/local/src/whypfs-gateway
 
-- name: Build WhyPFS
+- name: Build WhyPFS-Gateway
   ansible.builtin.shell:
-    cmd: '. /etc/profile.d/golang.sh ; go build'
-    chdir: /usr/local/src/whypfs
-    creates: /usr/local/src/whypfs/whypfs
+    cmd: ". /etc/profile.d/golang.sh  ;  go mod tidy ; go mod download ; go build -tags netgo -ldflags '-s -w' -o whypfs-gw"
+    chdir: /usr/local/src/whypfs-gateway
+    creates: /usr/local/src/whypfs-gateway/whypfs-gw
