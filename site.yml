@@ -123,4 +123,4 @@
     - role: gantsign.golang
       golang_gopath: '$HOME/workspace-go'
       golang_version: '1.18.9'
-    - role: whypfs
+    - role: whypfs-gateway
