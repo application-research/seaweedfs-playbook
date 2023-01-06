@@ -1,0 +1,15 @@
+[Unit]
+Description=Whypfs Gateway
+Requires=network-online.target
+#REVIEW requires network online?
+
+[Service]
+#REVIEW using working directory instead of sym link feels cleaner
+WorkingDirectory=${SEAWEED_DIR}
+EnvironmentFile=/etc/whypfs-gateway/whypfs-gateway.cfg
+ExecStart=/usr/local/src/whypfs-gateway/whypfs-gw
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
