@@ -2,8 +2,8 @@
 # Install SeaweedFS
 - name: Download SeaweedFS
   ansible.builtin.get_url:
-    url: https://github.com/seaweedfs/seaweedfs/releases/download/3.37/linux_amd64.tar.gz
-    dest: /usr/local/src/seaweedfs_3.37_linux.tar.gz
+    url: https://github.com/seaweedfs/seaweedfs/releases/download/3.38/linux_amd64.tar.gz
+    dest: /usr/local/src/seaweedfs_3.38_linux.tar.gz
     owner: root
     group: root
     mode: 0755
@@ -18,7 +18,7 @@
 
 - name: Unpack SeaweedFS
   ansible.builtin.unarchive:
-    src: /usr/local/src/seaweedfs_3.37_linux.tar.gz
+    src: /usr/local/src/seaweedfs_3.38_linux.tar.gz
     dest: /usr/local/bin
     remote_src: true
 
