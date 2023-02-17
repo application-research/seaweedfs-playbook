@@ -8,7 +8,7 @@
 - name: Check out WhyPFS-Gateway
   ansible.builtin.git:
     repo: https://github.com/application-research/whypfs-gateway
-    version: master
+    version: main
     dest: /usr/local/src/whypfs-gateway
 
 - name: Build WhyPFS-Gateway

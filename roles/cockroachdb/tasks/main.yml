@@ -8,13 +8,13 @@
 
 - name: Install CockroachDB binary
   ansible.builtin.unarchive:
-    src: https://binaries.cockroachdb.com/cockroach-v22.2.0.linux-amd64.tgz
+    src: https://binaries.cockroachdb.com/cockroach-v22.2.3.linux-amd64.tgz
     dest: /usr/local/bin/
     remote_src: true
     extra_opts:
       - "--strip-components=1"
       - "--add-file"
-      - "cockroach-v22.2.0.linux-amd64/cockroach"
+      - "cockroach-v22.2.3.linux-amd64/cockroach"
 
 - name: Install systemd file for CockroachDB server
   ansible.builtin.template:
@@ -34,14 +34,14 @@
 
 - name: Install CockroachDB libraries
   ansible.builtin.unarchive:
-    src: https://binaries.cockroachdb.com/cockroach-v22.2.0.linux-amd64.tgz
+    src: https://binaries.cockroachdb.com/cockroach-v22.2.3.linux-amd64.tgz
     dest: /usr/local/lib/cockroach
     remote_src: true
     extra_opts:
       - "--strip-components=2"
       - "--add-file"
-      - "cockroach-v22.2.0.linux-amd64/lib/libgeos.so"
-      - "cockroach-v22.2.0.linux-amd64/lib/libgeos_c.so"
+      - "cockroach-v22.2.3.linux-amd64/lib/libgeos.so"
+      - "cockroach-v22.2.3.linux-amd64/lib/libgeos_c.so"
 
 - name: Create CockroachDB data directory
   ansible.builtin.file:

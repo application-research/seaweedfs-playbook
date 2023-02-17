@@ -2,7 +2,6 @@
 - name: Install SeaweedFS
   hosts: seaweedfs
   become: true
-  remote_user: root
 
   vars_files:
     - "vars/secrets.yml"
@@ -14,7 +13,6 @@
 - name: Set up SeaweedFS Masters
   hosts: seaweedfs_masters
   become: true
-  remote_user: root
 
   vars_files:
     - "vars/secrets.yml"
@@ -26,10 +24,9 @@
 - name: Set up CockroachDB
   hosts: cockroachdb
   become: true
-  remote_user: root
 
   vars:
-    cockroachdb_initialize: false
+    cockroachdb_initialize: true
 
   roles:
     - cockroachdb
@@ -37,7 +34,6 @@
 - name: Set up SeaweedFS Filers
   hosts: seaweedfs_filers
   become: true
-  remote_user: root
 
   vars_files:
     - "vars/secrets.yml"
@@ -50,7 +46,6 @@
 - name: Set up SeaweedFS Volume Servers
   hosts: seaweedfs_volume_servers
   become: true
-  remote_user: root
 
   vars_files:
     - "vars/secrets.yml"
@@ -62,7 +57,6 @@
 - name: Set up SeaweedFS Mounts
   hosts: whypfs_nodes
   become: true
-  remote_user: root
 
   tasks:
     - name: Make SeaweedFS mount point
@@ -94,7 +88,6 @@
 - name: Setup Filer sync relationships
   hosts: seaweedfs_sync_filers
   become: true
-  remote_user: root
 
   tasks:
     - name: Create the sync systemd service
@@ -117,7 +110,6 @@
 - name: Install WhyPFS
   hosts: whypfs_nodes
   become: true
-  remote_user: root
 
   roles:
     - role: gantsign.golang

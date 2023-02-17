@@ -1,0 +1,12 @@
+[Unit]
+Description=WhyPFS
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/src/whypfs/whypfs --database="postgres=host={{ ansible_wt0.ipv4.address }} port=26258 user=whypfs dbname=whypfs"
+
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

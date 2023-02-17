@@ -1,0 +1,29 @@
+[aus:vars]
+seaweedfs_region=aus
+
+[aus]
+weed-m01 ansible_host=10.1.3.249 cockroachdb_locality="region=per,zone=per1"
+weed-m02 ansible_host=10.1.3.126 cockroachdb_locality="region=per,zone=per1"
+weed-m03 ansible_host=10.1.4.188 cockroachdb_locality="region=per,zone=per1"
+
+[seaweedfs:vars]
+[seaweedfs:children]
+aus
+
+[seaweedfs_masters]
+weed-m01 ansible_host=10.1.3.249 cockroachdb_locality="region=per,zone=per1"
+weed-m02 ansible_host=10.1.3.126 cockroachdb_locality="region=per,zone=per1"
+weed-m03 ansible_host=10.1.4.188 cockroachdb_locality="region=per,zone=per1"
+
+[seaweedfs_volume_servers]
+
+[seaweedfs_filers:children]
+seaweedfs_masters
+
+[whypfs_nodes:children]
+seaweedfs_masters
+
+[cockroachdb:children]
+seaweedfs_masters
+
+[seaweedfs_sync_filers]
