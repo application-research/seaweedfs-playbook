@@ -2,3 +2,4 @@
 roles:
   - name: gantsign.golang
     version: 3.0.5
+  - name: zorlin.netbird
