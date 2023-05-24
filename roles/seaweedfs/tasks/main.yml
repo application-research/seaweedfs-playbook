@@ -10,7 +10,6 @@
   ansible.builtin.make:
     chdir: /usr/local/src/seaweedfs
     target: weed
-    mode: "0755"
 
 - name: Install SeaweedFS
   ansible.builtin.copy:
