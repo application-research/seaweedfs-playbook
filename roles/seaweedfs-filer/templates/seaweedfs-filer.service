@@ -3,7 +3,7 @@ Description=SeaweedFS Filer
 After=network-online.target
 
 [Service]
-ExecStart=/usr/local/bin/weed filer -ip={{ ansible_ens18.ipv4.address }} -master={% for node in groups.seaweedfs_masters | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_ens18"]["ipv4"]["address"] }}:9333{% if not loop.last %},{% endif %}{% endfor %}
+ExecStart=/usr/local/bin/weed filer -s3 -ip={{ ansible_ens18.ipv4.address }} -master={% for node in groups.seaweedfs_masters | intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_ens18"]["ipv4"]["address"] }}:9333{% if not loop.last %},{% endif %}{% endfor %}
 
 Restart=always
 RestartSec=10
