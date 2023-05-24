@@ -15,14 +15,6 @@
     group: root
     mode: "0755"
 
-- name: Create example storage volume
-  ansible.builtin.file:
-    path: /seaweed-brick/
-    owner: roota
-    group: root
-    mode: "0750"
-    state: directory
-
 - name: Start and enable SeaweedFS volume server
   ansible.builtin.systemd:
     name: seaweedfs-volume-server
