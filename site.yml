@@ -4,40 +4,48 @@
   become: true
 
   roles:
+    # Install Golang using the Gantsign role.
+    - role: gantsign.golang
+      golang_gopath: '$HOME/workspace-go'
     - seaweedfs
 
-# - name: Set up SeaweedFS Masters
-#   hosts: seaweedfs_masters
-#   become: true
+- name: Set up SeaweedFS Masters
+  hosts: seaweedfs_masters
+  become: true
 
-#   vars_files:
-#     - "vars/secrets.yml"
-#     - "vars/seaweedfs.yml"
-#     - haproxy
-#   roles:
-#     - seaweedfs-master
+  vars_files:
+    - "vars/seaweedfs.yml"
+  roles:
+    - seaweedfs-master
 
-# - name: Set up SeaweedFS Filers
-#   hosts: seaweedfs_filers
-#   become: true
+- name: Gather hosts
+  hosts: redis
+  gather_facts: false
+  become: true
 
-#   vars_files:
-#     - "vars/secrets.yml"
-#     - "vars/seaweedfs.yml"
+  tasks:
+    - name: Setup facts
+      ansible.builtin.setup:
 
-#   roles:
-#     - seaweedfs-filer
+- name: Set up SeaweedFS Filers
+  hosts: seaweedfs_filers
+  become: true
 
-# - name: Set up SeaweedFS Volume Servers
-#   hosts: seaweedfs_volume_servers
-#   become: true
+  vars_files:
+    - "vars/seaweedfs.yml"
 
-#   vars_files:
-#     - "vars/secrets.yml"
-#     - "vars/seaweedfs.yml"
+  roles:
+    - seaweedfs-filer
 
-#   roles:
-#     - seaweedfs-volume-server
+- name: Set up SeaweedFS Volume Servers
+  hosts: seaweedfs_volume_servers
+  become: true
+
+  vars_files:
+    - "vars/seaweedfs.yml"
+
+  roles:
+    - seaweedfs-volume-server
 
 # - name: Set up SeaweedFS Mounts
 #   hosts: whypfs_nodes

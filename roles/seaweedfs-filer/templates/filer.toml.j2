@@ -10,50 +10,15 @@ recursive_delete = false
 # The following are filer store options
 ####################################################
 
-[postgres] # or cockroachdb, YugabyteDB
-# CREATE TABLE IF NOT EXISTS filemeta (
-#   dirhash     BIGINT,
-#   name        VARCHAR(65535),
-#   directory   VARCHAR(65535),
-#   meta        bytea,
-#   PRIMARY KEY (dirhash, name)
-# );
+[redis_cluster3] # beta
 enabled = true
-hostname = "{{ ansible_wt0.ipv4.address }}"
-port = 26258
-username = "seaweedfs"
-password = ""
-database = "seaweedfs_{{ seaweedfs_region }}"          # create or use an existing database
-schema = ""
-sslmode = "disable"
-connection_max_idle = 100
-connection_max_open = 100
-connection_max_lifetime_seconds = 0
-# if insert/upsert failing, you can disable upsert or update query syntax to match your RDBMS syntax:
-enableUpsert = true
-upsertQuery = """INSERT INTO "%[1]s" (dirhash,name,directory,meta) VALUES($1,$2,$3,$4) ON CONFLICT (dirhash,name) DO UPDATE SET meta = EXCLUDED.meta WHERE "%[1]s".meta != EXCLUDED.meta"""
-
-[postgres2]
-enabled = false
-createTable = """
-  CREATE TABLE IF NOT EXISTS "%s" (
-    dirhash   BIGINT,
-    name      VARCHAR(65535),
-    directory VARCHAR(65535),
-    meta      bytea,
-    PRIMARY KEY (dirhash, name)
-  );
-"""
-hostname = "localhost"
-port = 5432
-username = "postgres"
-password = ""
-database = "postgres"          # create or use an existing database
-schema = ""
-sslmode = "disable"
-connection_max_idle = 100
-connection_max_open = 100
-connection_max_lifetime_seconds = 0
-# if insert/upsert failing, you can disable upsert or update query syntax to match your RDBMS syntax:
-enableUpsert = true
-upsertQuery = """INSERT INTO "%[1]s" (dirhash,name,directory,meta) VALUES($1,$2,$3,$4) ON CONFLICT (dirhash,name) DO UPDATE SET meta = EXCLUDED.meta WHERE "%[1]s".meta != EXCLUDED.meta"""
+addresses = [
+    {% for node in groups.redis %}
+    "{{ hostvars[node]["ansible_ens18"]["ipv4"]["address"] }}:6379",
+    {% endfor %}
+]
+password = "{{ redis_password }}"
+# allows reads from slave servers or the master, but all writes still go to the master
+readOnly = false
+# automatically use the closest Redis server for reads
+routeByLatency = false

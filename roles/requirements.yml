@@ -1,0 +1,4 @@
+---
+roles:
+  - name: gantsign.golang
+    version: 3.1.4
