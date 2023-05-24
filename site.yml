@@ -3,116 +3,91 @@
   hosts: seaweedfs
   become: true
 
-  vars_files:
-    - "vars/secrets.yml"
-
   roles:
-    - zorlin.netbird
     - seaweedfs
 
-- name: Set up SeaweedFS Masters
-  hosts: seaweedfs_masters
-  become: true
+# - name: Set up SeaweedFS Masters
+#   hosts: seaweedfs_masters
+#   become: true
 
-  vars_files:
-    - "vars/secrets.yml"
-    - "vars/seaweedfs.yml"
+#   vars_files:
+#     - "vars/secrets.yml"
+#     - "vars/seaweedfs.yml"
+#     - haproxy
+#   roles:
+#     - seaweedfs-master
 
-  roles:
-    - seaweedfs-master
+# - name: Set up SeaweedFS Filers
+#   hosts: seaweedfs_filers
+#   become: true
 
-- name: Set up CockroachDB
-  hosts: cockroachdb
-  become: true
+#   vars_files:
+#     - "vars/secrets.yml"
+#     - "vars/seaweedfs.yml"
 
-  vars:
-    cockroachdb_initialize: true
+#   roles:
+#     - seaweedfs-filer
 
-  roles:
-    - cockroachdb
+# - name: Set up SeaweedFS Volume Servers
+#   hosts: seaweedfs_volume_servers
+#   become: true
 
-- name: Set up SeaweedFS Filers
-  hosts: seaweedfs_filers
-  become: true
+#   vars_files:
+#     - "vars/secrets.yml"
+#     - "vars/seaweedfs.yml"
 
-  vars_files:
-    - "vars/secrets.yml"
-    - "vars/seaweedfs.yml"
+#   roles:
+#     - seaweedfs-volume-server
 
-  roles:
-    - haproxy
-    - seaweedfs-filer
+# - name: Set up SeaweedFS Mounts
+#   hosts: whypfs_nodes
+#   become: true
 
-- name: Set up SeaweedFS Volume Servers
-  hosts: seaweedfs_volume_servers
-  become: true
+#   tasks:
+#     - name: Make SeaweedFS mount point
+#       ansible.builtin.file:
+#         path: /mnt/seaweedfs
+#         owner: root
+#         group: root
+#         mode: 0755
+#         state: directory
 
-  vars_files:
-    - "vars/secrets.yml"
-    - "vars/seaweedfs.yml"
+#     - name: Set up SeaweedFS mount
+#       ansible.builtin.template:
+#         src: mnt-seaweedfs.mount.j2
+#         dest: /etc/systemd/system/mnt-seaweedfs.mount
+#         owner: root
+#         group: root
+#         mode: 0755
 
-  roles:
-    - seaweedfs-volume-server
+#     - name: Enable SeaweedFS mount
+#       # noqa ignore-errors
+#       ansible.builtin.systemd:
+#         name: mnt-seaweedfs.mount
+#         enabled: true
+#         state: started
+#         daemon_reload: true
+#       ignore_errors: true
+#       failed_when: false
 
-- name: Set up SeaweedFS Mounts
-  hosts: whypfs_nodes
-  become: true
+# - name: Setup Filer sync relationships
+#   hosts: seaweedfs_sync_filers
+#   become: true
 
-  tasks:
-    - name: Make SeaweedFS mount point
-      ansible.builtin.file:
-        path: /mnt/seaweedfs
-        owner: root
-        group: root
-        mode: 0755
-        state: directory
+#   tasks:
+#     - name: Create the sync systemd service
+#       ansible.builtin.template:
+#         src: seaweedfs-sync.service.j2
+#         dest: /etc/systemd/system/seaweedfs-sync.service
+#         owner: root
+#         group: root
+#         mode: 0755
+#       when: sync_partner | default('', true) | length > 0
 
-    - name: Set up SeaweedFS mount
-      ansible.builtin.template:
-        src: mnt-seaweedfs.mount.j2
-        dest: /etc/systemd/system/mnt-seaweedfs.mount
-        owner: root
-        group: root
-        mode: 0755
-
-    - name: Enable SeaweedFS mount
-      # noqa ignore-errors
-      ansible.builtin.systemd:
-        name: mnt-seaweedfs.mount
-        enabled: true
-        state: started
-        daemon_reload: true
-      ignore_errors: true
-      failed_when: false
-
-- name: Setup Filer sync relationships
-  hosts: seaweedfs_sync_filers
-  become: true
-
-  tasks:
-    - name: Create the sync systemd service
-      ansible.builtin.template:
-        src: seaweedfs-sync.service.j2
-        dest: /etc/systemd/system/seaweedfs-sync.service
-        owner: root
-        group: root
-        mode: 0755
-      when: sync_partner | default('', true) | length > 0
-
-    - name: Start and enable SeaweedFS sync service
-      ansible.builtin.systemd:
-        name: seaweedfs-sync
-        enabled: true
-        state: restarted
-        daemon_reload: true
-      when: sync_partner | default('', true) | length > 0
-
-- name: Install WhyPFS
-  hosts: whypfs_nodes
-  become: true
-
-  roles:
-    - role: gantsign.golang
-      golang_gopath: '$HOME/workspace-go'
-      golang_version: '1.18.9'
-    - role: whypfs-gateway
+#     - name: Start and enable SeaweedFS sync service
+#       ansible.builtin.systemd:
+#         name: seaweedfs-sync
+#         enabled: true
+#         state: restarted
+#         daemon_reload: true
+#       when: sync_partner | default('', true) | length > 0

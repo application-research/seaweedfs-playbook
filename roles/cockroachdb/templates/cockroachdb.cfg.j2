@@ -1,2 +1,0 @@
-COCKROACHDB_IP={{ ansible_wt0.ipv4.address }}
-COCKROACHDB_JOIN={% for node in groups.cockroachdb|intersect(groups[seaweedfs_region]) %}{{ hostvars[node]["ansible_wt0"]["ipv4"]["address"] }}:26257{% if not loop.last %},{% endif %}{% endfor %}

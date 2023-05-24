@@ -1,47 +1,38 @@
 ---
 # Install SeaweedFS
-- name: Download SeaweedFS
-  ansible.builtin.get_url:
-    url: https://github.com/seaweedfs/seaweedfs/releases/download/3.42/linux_amd64.tar.gz
-    dest: /usr/local/src/seaweedfs_3.42_linux.tar.gz
+- name: Check out seaweedfs
+  ansible.builtin.git:
+    repo: https://github.com/application-research/seaweedfs
+    dest: /usr/local/src/seaweedfs
+    version: 3.51
+
+- name: Compile SeaweedFS
+  ansible.builtin.make:
+    chdir: /usr/local/src/seaweedfs
+    target: weed
+    mode: "0755"
+    creates: /usr/local/src/seaweedfs/weed
+
+- name: Install SeaweedFS
+  ansible.builtin.copy:
+    src: /usr/local/src/seaweedfs/weed
+    dest: /usr/local/bin/weed
     owner: root
     group: root
-    mode: 0755
-
-- name: Create unpack directory for seaweedfs
-  ansible.builtin.file:
-    path: /usr/local/src/seaweedfs
-    owner: root
-    group: root
-    mode: 0755
-    state: directory
-
-- name: Unpack SeaweedFS
-  ansible.builtin.unarchive:
-    src: /usr/local/src/seaweedfs_3.42_linux.tar.gz
-    dest: /usr/local/bin
-    remote_src: true
-
-- name: Ensure 'weed' executable has execute bit
-  ansible.builtin.file:
-    path: /usr/local/bin/weed
-    mode: 0755
-    owner: root
-    group: root
-    state: file
+    mode: "0755"
 
 - name: Ensure the SeaweedFS config directory exists
   ansible.builtin.file:
     path: /etc/seaweedfs
-    mode: 0755
+    mode: "0755"
     owner: root
     group: root
     state: directory
 
-- name: Install security config for SeaweedFS
-  ansible.builtin.template:
-    src: security.toml.j2
-    dest: /etc/seaweedfs/security.toml
-    owner: root
-    group: root
-    mode: 0644
+# - name: Install security config for SeaweedFS
+#   ansible.builtin.template:
+#     src: security.toml.j2
+#     dest: /etc/seaweedfs/security.toml
+#     owner: root
+#     group: root
+#     mode: "0644"
